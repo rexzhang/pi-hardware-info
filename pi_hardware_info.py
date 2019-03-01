@@ -66,7 +66,7 @@ class PiHardwareInfo(object):
     manufacturer = None
 
     def __str__(self):
-        return '<PiHardwareInfo: 0x{:o}, {}, {}, {}, {}, {}, {}>'.format(
+        return '<PiHardwareInfo: 0x{:x}, {}, {}, {}, {}, {}, {}>'.format(
             self.revision_code, self.model_type.name, self.processor.name, self.memory,
             self.revision, self.manufacturer.name, self.serial_number
         )

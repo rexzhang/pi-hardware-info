@@ -6,6 +6,9 @@ Get Raspberry Pi hardware info from /proc/cpuinfo
 ```bash
 curl -s https://raw.githubusercontent.com/rexzhang/pi-hardware-info/master/pi_hardware_info.py | python3
 ```
+```text
+<PiHardwareInfo: 0x50020323, MODEL_3B_PLUS, BCM2837, 1024, 1.3, Sony_UK, 00000000d855943b>
+```
 
 # Install
 ```bash
