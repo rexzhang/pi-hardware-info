@@ -2,8 +2,15 @@
 # coding=utf-8
 
 
+"""Get Raspberry Pi hardware info"""
+
 import re
 from enum import IntEnum
+
+__version__ = '0.1.0'
+__author__ = 'Rex Zhang'
+__author_email__ = 'rex.zhang@gmail.com'
+__licence__ = 'MIT'
 
 _memory = [
     256,
@@ -48,6 +55,8 @@ class ModelType(IntEnum):
 
 
 class PiHardwareInfo(object):
+    revision_code = None
+
     model_type = None
     processor = None
     memory = 0
@@ -57,13 +66,15 @@ class PiHardwareInfo(object):
     manufacturer = None
 
     def __str__(self):
-        return '<PiHardwareInfo: {}, {}, {}, {}, {}>'.format(
-            self.model_type.name, self.processor.name, self.memory, self.revision, self.manufacturer.name
+        return '<PiHardwareInfo: 0x{:o}, {}, {}, {}, {}, {}, {}>'.format(
+            self.revision_code, self.model_type.name, self.processor.name, self.memory,
+            self.revision, self.manufacturer.name, self.serial_number
         )
 
 
 def get_info_from_revision_code(code):
     info = PiHardwareInfo()
+    info.revision_code = code
     info.model_type = ModelType((code & 0xFF0) >> 4)
     info.processor = Processor((code & 0xF000) >> 12)
     info.memory = _memory[(code & 0x700000) >> 20]

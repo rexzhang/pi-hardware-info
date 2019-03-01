@@ -1,6 +1,16 @@
-# pi-hardware-info
-Get raspberry hardware info from revision code
+# PiHardwareInfo
+Get Raspberry Pi hardware info from /proc/cpuinfo
 
+
+# Try
+```bash
+curl -s https://raw.githubusercontent.com/rexzhang/pi-hardware-info/master/pi_hardware_info.py | python3
+```
+
+# Install
+```bash
+pip install PiHardwareInfo
+```
 
 # Other choice
 * https://github.com/tompreston/raspi-version (work)
