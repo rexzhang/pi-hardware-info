@@ -6,12 +6,13 @@
 Get Raspberry Pi hardware info
 
 https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
+https://www.raspberrypi.org/documentation/hardware/raspberrypi/README.md
 """
 
 import re
 from enum import IntEnum
 
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 __author__ = 'Rex Zhang'
 __author_email__ = 'rex.zhang@gmail.com'
 __licence__ = 'MIT'
@@ -47,53 +48,53 @@ class Processor(IntEnum):
 class ModelType(IntEnum):
     UNKNOWN = -100
 
-    MODEL_A = 0
-    MODEL_B = 1
-    MODEL_A_PLUS = 2
-    MODEL_B_PLUS = 3
-    MODEL_2B = 4
-    MODEL_ALPHA = 5
-    MODEL_CM1 = 6
-    # MODEL_UNKNOWN = 7
-    MODEL_3B = 8
-    MODEL_ZERO = 9
-    MODEL_CM3 = 0xa
-    # MODEL_UNKNOWN = 0xb
-    MODEL_ZERO_W = 0xc
-    MODEL_3B_PLUS = 0xd
-    MODEL_3A_PLUS = 0xe
-    # MODEL_UNKNOWN = 0xf
-    MODEL_CM3_PLUS = 0x10
+    RPI_A = 0
+    RPI_B = 1
+    RPI_A_PLUS = 2
+    RPI_B_PLUS = 3
+    RPI_2B = 4
+    RPI_ALPHA = 5
+    RPI_CM1 = 6
+    # RPI_UNKNOWN = 7
+    RPI_3B = 8
+    RPI_ZERO = 9
+    RPI_CM3 = 0xa
+    # RPI_UNKNOWN = 0xb
+    RPI_ZERO_W = 0xc
+    RPI_3B_PLUS = 0xd
+    RPI_3A_PLUS = 0xe
+    # RPI_UNKNOWN = 0xf
+    RPI_CM3_PLUS = 0x10
 
 
 _old_style = {
-    0x0002: (ModelType.MODEL_B, 1.0, 256, Manufacturer.EGOMAN),
-    0x0003: (ModelType.MODEL_B, 1.0, 256, Manufacturer.EGOMAN),
-    0x0004: (ModelType.MODEL_B, 2.0, 256, Manufacturer.SONY_UK),
-    0x0005: (ModelType.MODEL_B, 2.0, 256, Manufacturer.QISDA),
-    0x0006: (ModelType.MODEL_B, 2.0, 256, Manufacturer.EGOMAN),
-    0x0007: (ModelType.MODEL_A, 2.0, 256, Manufacturer.EGOMAN),
-    0x0008: (ModelType.MODEL_A, 2.0, 256, Manufacturer.SONY_UK),
-    0x0009: (ModelType.MODEL_A, 2.0, 256, Manufacturer.QISDA),
-    0x000d: (ModelType.MODEL_B, 2.0, 512, Manufacturer.EGOMAN),
-    0x000e: (ModelType.MODEL_B, 2.0, 512, Manufacturer.SONY_UK),
-    0x000f: (ModelType.MODEL_B, 2.0, 512, Manufacturer.EGOMAN),
-    0x0010: (ModelType.MODEL_B_PLUS, 1.2, 512, Manufacturer.SONY_UK),
-    0x0011: (ModelType.MODEL_CM1, 1.0, 512, Manufacturer.SONY_UK),
-    0x0012: (ModelType.MODEL_A_PLUS, 1.1, 256, Manufacturer.SONY_UK),
-    0x0013: (ModelType.MODEL_B_PLUS, 1.2, 512, Manufacturer.EMBEST),
-    0x0014: (ModelType.MODEL_CM1, 1.0, 512, Manufacturer.EMBEST),
-    0x0015: (ModelType.MODEL_A_PLUS, 1.1, 512, Manufacturer.EMBEST),
+    0x0002: (ModelType.RPI_B, 1.0, 256, Manufacturer.EGOMAN),
+    0x0003: (ModelType.RPI_B, 1.0, 256, Manufacturer.EGOMAN),
+    0x0004: (ModelType.RPI_B, 2.0, 256, Manufacturer.SONY_UK),
+    0x0005: (ModelType.RPI_B, 2.0, 256, Manufacturer.QISDA),
+    0x0006: (ModelType.RPI_B, 2.0, 256, Manufacturer.EGOMAN),
+    0x0007: (ModelType.RPI_A, 2.0, 256, Manufacturer.EGOMAN),
+    0x0008: (ModelType.RPI_A, 2.0, 256, Manufacturer.SONY_UK),
+    0x0009: (ModelType.RPI_A, 2.0, 256, Manufacturer.QISDA),
+    0x000d: (ModelType.RPI_B, 2.0, 512, Manufacturer.EGOMAN),
+    0x000e: (ModelType.RPI_B, 2.0, 512, Manufacturer.SONY_UK),
+    0x000f: (ModelType.RPI_B, 2.0, 512, Manufacturer.EGOMAN),
+    0x0010: (ModelType.RPI_B_PLUS, 1.2, 512, Manufacturer.SONY_UK),
+    0x0011: (ModelType.RPI_CM1, 1.0, 512, Manufacturer.SONY_UK),
+    0x0012: (ModelType.RPI_A_PLUS, 1.1, 256, Manufacturer.SONY_UK),
+    0x0013: (ModelType.RPI_B_PLUS, 1.2, 512, Manufacturer.EMBEST),
+    0x0014: (ModelType.RPI_CM1, 1.0, 512, Manufacturer.EMBEST),
+    0x0015: (ModelType.RPI_A_PLUS, 1.1, 512, Manufacturer.EMBEST),
 }
 
 
 class PiHardwareInfo(object):
-    revision_code = None
+    revision_code = 0
 
     model_type = ModelType.UNKNOWN
     processor = Processor.UNKNOWN
     memory = 0
-    revision = None
+    revision = '0.0'
     serial_number = 'UNKNOWN'
 
     manufacturer = Manufacturer.UNKNOWN
@@ -129,14 +130,20 @@ def get_info_from_revision_code(code):
 
 def get_info():
     info = None
-    for line in open("/proc/cpuinfo"):
-        if "Revision" in line:
-            info = get_info_from_revision_code(
-                int(re.sub(r'Revision\t: ([a-z0-9]+)\n', r'\1', line), 16)
-            )
 
-        if line[0:6] == 'Serial':
-            info.serial_number = line[10:26]
+    try:
+        with open('/proc/cpuinfo') as f:
+            for line in f:
+                if "Revision" in line:
+                    info = get_info_from_revision_code(
+                        int(re.sub(r'Revision\t: ([a-z0-9]+)\n', r'\1', line), 16)
+                    )
+
+                if line[0:6] == 'Serial':
+                    info.serial_number = line[10:26]
+
+    except FileNotFoundError:
+        info = PiHardwareInfo()
 
     return info
 
