@@ -3,11 +3,15 @@ Get Raspberry Pi hardware info from /proc/cpuinfo
 
 
 # Try
+run
 ```bash
 curl -s https://raw.githubusercontent.com/rexzhang/pi-hardware-info/master/pi_hardware_info.py | python3
 ```
+
+result
 ```text
-<PiHardwareInfo:0xa020d3, MODEL_3B_PLUS, BCM2837, 1024, 1.3, Sony_UK, 00000000d855943b>
+<PiHardwareInfo:0x000005, MODEL_B, UNKNOWN, 256, 2.0, QISDA, UNKNOWN>
+<PiHardwareInfo:0xa020d3, MODEL_3B_PLUS, BCM2837, 1024, 1.3, SONY_UK, 00000000d855943b>
 ```
 
 # Install
@@ -23,11 +27,11 @@ info = get_info()
 if info.model_type == ModelType.MODEL_3B_PLUS:
     print('5G Wifi ready')
     
-else:
+elif info.model_type == ModelType.MODEL_3B:
     print('only 2.4G Wifi')
 ```
 
-# Other choice
+# Alternative
 * https://github.com/tompreston/raspi-version (work)
 * https://pypi.org/project/pirev
 * https://pypi.org/project/RPi.version

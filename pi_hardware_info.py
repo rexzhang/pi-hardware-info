@@ -94,7 +94,7 @@ class PiHardwareInfo(object):
     processor = Processor.UNKNOWN
     memory = 0
     revision = None
-    serial_number = None
+    serial_number = 'UNKNOWN'
 
     manufacturer = Manufacturer.UNKNOWN
 
