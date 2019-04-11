@@ -2,11 +2,11 @@
 PiHardwareInfo
 ==============
 
-.. image:: https://img.shields.io/pypi/v/flask-vises.svg
+.. image:: https://img.shields.io/pypi/v/PiHardwareInfo.svg
     :target: https://pypi.org/project/PiHardwareInfo/
-.. image:: https://img.shields.io/pypi/pyversions/flask-vises.svg
+.. image:: https://img.shields.io/pypi/pyversions/PiHardwareInfo.svg
     :target: https://pypi.org/project/PiHardwareInfo/
-.. image:: https://img.shields.io/pypi/dm/flask-vises.svg
+.. image:: https://img.shields.io/pypi/dm/PiHardwareInfo.svg
     :target: https://pypi.org/project/PiHardwareInfo/
 
 
