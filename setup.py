@@ -9,7 +9,7 @@ from setuptools import setup
 from codecs import open
 from os import path
 
-import pi_hardware_info
+import pi_hardware_info as module
 
 here = path.abspath(path.dirname(__file__))
 
@@ -23,27 +23,27 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=pi_hardware_info.__version__,
+    version=module.__version__,
 
-    description='Get Raspberry Pi hardware info',
+    description=module.__description__,
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/rexzhang/pi-hardware-info',
+    url=module.__project_url__,
 
     # Author details
-    author=pi_hardware_info.__author__,
-    author_email=pi_hardware_info.__author_email__,
+    author=module.__author__,
+    author_email=module.__author_email__,
 
     # Choose your license
-    license=pi_hardware_info.__licence__,
+    license=module.__licence__,
 
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 
         # Indicate who your project is intended for
 
@@ -52,8 +52,10 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
 
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],

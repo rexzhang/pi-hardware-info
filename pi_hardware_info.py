@@ -13,9 +13,13 @@ import re
 from enum import IntEnum
 
 __version__ = '0.3.2'
+
 __author__ = 'Rex Zhang'
 __author_email__ = 'rex.zhang@gmail.com'
 __licence__ = 'MIT'
+
+__description__ = 'Get Raspberry Pi hardware info'
+__project_url__ = 'https://github.com/rexzhang/pi-hardware-info'
 
 _memory = [
     256,
