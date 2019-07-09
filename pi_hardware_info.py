@@ -12,7 +12,7 @@ https://www.raspberrypi.org/documentation/hardware/raspberrypi/README.md
 import re
 from enum import IntEnum
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 __author__ = 'Rex Zhang'
 __author_email__ = 'rex.zhang@gmail.com'
