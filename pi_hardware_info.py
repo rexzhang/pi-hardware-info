@@ -24,7 +24,9 @@ __project_url__ = 'https://github.com/rexzhang/pi-hardware-info'
 _memory = [
     256,
     512,
-    1024
+    1024,
+    2048,
+    4096
 ]
 
 
@@ -47,6 +49,7 @@ class Processor(IntEnum):
     BCM2835 = 0
     BCM2836 = 1
     BCM2837 = 2
+    BCM2711 = 3
 
 
 class ModelType(IntEnum):
@@ -69,6 +72,7 @@ class ModelType(IntEnum):
     RPI_3A_PLUS = 0xe
     # RPI_UNKNOWN = 0xf
     RPI_CM3_PLUS = 0x10
+    RPI_4B = 0x11
 
 
 _old_style = {
