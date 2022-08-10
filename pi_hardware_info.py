@@ -1,30 +1,27 @@
-#!/usr/bin/env python
-# coding=utf-8
-
-
 """
 Get Raspberry Pi hardware info
 
+https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#raspberry-pi-revision-codes
 https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
 https://www.raspberrypi.org/documentation/hardware/raspberrypi/README.md
 """
 
 import re
-from enum import IntEnum
+from enum import Enum
 
-__version__ = '0.3.3'
+__version__ = "0.3.3"
 
-__author__ = 'Rex Zhang'
-__author_email__ = 'rex.zhang@gmail.com'
-__licence__ = 'MIT'
+__author__ = "Rex Zhang"
+__author_email__ = "rex.zhang@gmail.com"
+__licence__ = "MIT"
 
-__description__ = 'Get Raspberry Pi hardware info'
-__project_url__ = 'https://github.com/rexzhang/pi-hardware-info'
+__description__ = "Get Raspberry Pi hardware info"
+__project_url__ = "https://github.com/rexzhang/pi-hardware-info"
 
 _memory = [256, 512, 1024, 2048, 4096, 8192]
 
 
-class Manufacturer(IntEnum):
+class Manufacturer(Enum):
     UNKNOWN = -100
 
     QISDA = -10
@@ -37,7 +34,7 @@ class Manufacturer(IntEnum):
     STADIUM = 5
 
 
-class Processor(IntEnum):
+class Processor(Enum):
     UNKNOWN = -100
 
     BCM2835 = 0
@@ -46,7 +43,7 @@ class Processor(IntEnum):
     BCM2711 = 3
 
 
-class ModelType(IntEnum):
+class ModelType(Enum):
     UNKNOWN = -100
 
     RPI_A = 0
@@ -59,11 +56,11 @@ class ModelType(IntEnum):
     # RPI_UNKNOWN = 7
     RPI_3B = 8
     RPI_ZERO = 9
-    RPI_CM3 = 0xa
+    RPI_CM3 = 0xA
     # RPI_UNKNOWN = 0xb
-    RPI_ZERO_W = 0xc
-    RPI_3B_PLUS = 0xd
-    RPI_3A_PLUS = 0xe
+    RPI_ZERO_W = 0xC
+    RPI_3B_PLUS = 0xD
+    RPI_3A_PLUS = 0xE
     # RPI_UNKNOWN = 0xf
     RPI_CM3_PLUS = 0x10
     RPI_4B = 0x11
@@ -81,9 +78,9 @@ _old_style = {
     0x0007: (ModelType.RPI_A, 2.0, 256, Manufacturer.EGOMAN),
     0x0008: (ModelType.RPI_A, 2.0, 256, Manufacturer.SONY_UK),
     0x0009: (ModelType.RPI_A, 2.0, 256, Manufacturer.QISDA),
-    0x000d: (ModelType.RPI_B, 2.0, 512, Manufacturer.EGOMAN),
-    0x000e: (ModelType.RPI_B, 2.0, 512, Manufacturer.SONY_UK),
-    0x000f: (ModelType.RPI_B, 2.0, 512, Manufacturer.EGOMAN),
+    0x000D: (ModelType.RPI_B, 2.0, 512, Manufacturer.EGOMAN),
+    0x000E: (ModelType.RPI_B, 2.0, 512, Manufacturer.SONY_UK),
+    0x000F: (ModelType.RPI_B, 2.0, 512, Manufacturer.EGOMAN),
     0x0010: (ModelType.RPI_B_PLUS, 1.2, 512, Manufacturer.SONY_UK),
     0x0011: (ModelType.RPI_CM1, 1.0, 512, Manufacturer.SONY_UK),
     0x0012: (ModelType.RPI_A_PLUS, 1.1, 256, Manufacturer.SONY_UK),
@@ -99,15 +96,20 @@ class PiHardwareInfo(object):
     model_type = ModelType.UNKNOWN
     processor = Processor.UNKNOWN
     memory = 0
-    revision = '0.0'
-    serial_number = 'UNKNOWN'
+    revision = "0.0"
+    serial_number = "UNKNOWN"
 
     manufacturer = Manufacturer.UNKNOWN
 
     def __str__(self):
-        return '<PiHardwareInfo:{:#08x}, {}, {}, {}, {}, {}, {}>'.format(
-            self.revision_code, self.model_type.name, self.processor.name, self.memory,
-            self.revision, self.manufacturer.name, self.serial_number
+        return "<PiHardwareInfo:{:#08x}, {}, {}, {}, {}, {}, {}>".format(
+            self.revision_code,
+            self.model_type.name,
+            self.processor.name,
+            self.memory,
+            self.revision,
+            self.manufacturer.name,
+            self.serial_number,
         )
 
 
@@ -120,7 +122,7 @@ def get_info_from_revision_code(code):
         info.model_type = ModelType((code & 0xFF0) >> 4)
         info.processor = Processor((code & 0xF000) >> 12)
         info.memory = _memory[(code & 0x700000) >> 20]
-        info.revision = '1.{}'.format(code & 0xF)
+        info.revision = "1.{}".format(code & 0xF)
 
         info.manufacturer = Manufacturer((code & 0xF0000) >> 16)
 
@@ -128,6 +130,7 @@ def get_info_from_revision_code(code):
         info.model_type = _old_style[code][0]
         info.revision = _old_style[code][1]
         info.memory = _old_style[code][2]
+
         info.manufacturer = _old_style[code][3]
 
     return info
@@ -137,14 +140,14 @@ def get_info():
     info = None
 
     try:
-        with open('/proc/cpuinfo') as f:
+        with open("/proc/cpuinfo") as f:
             for line in f:
                 if "Revision" in line:
                     info = get_info_from_revision_code(
-                        int(re.sub(r'Revision\t: ([a-z0-9]+)\n', r'\1', line), 16)
+                        int(re.sub(r"Revision\t: ([a-z0-9]+)\n", r"\1", line), 16)
                     )
 
-                if line[0:6] == 'Serial':
+                if line[0:6] == "Serial":
                     info.serial_number = line[10:26]
 
     except FileNotFoundError:
@@ -153,7 +156,7 @@ def get_info():
     return info
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # print(get_info_from_revision_code(int('0005', 16)))
     # print(get_info_from_revision_code(int('a020d3', 16)))
     print(get_info())
