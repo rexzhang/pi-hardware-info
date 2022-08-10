@@ -21,13 +21,7 @@ __licence__ = 'MIT'
 __description__ = 'Get Raspberry Pi hardware info'
 __project_url__ = 'https://github.com/rexzhang/pi-hardware-info'
 
-_memory = [
-    256,
-    512,
-    1024,
-    2048,
-    4096
-]
+_memory = [256, 512, 1024, 2048, 4096, 8192]
 
 
 class Manufacturer(IntEnum):
@@ -73,6 +67,9 @@ class ModelType(IntEnum):
     # RPI_UNKNOWN = 0xf
     RPI_CM3_PLUS = 0x10
     RPI_4B = 0x11
+    RPI_Zero2W = 0x12
+    RPI_400 = 0x13
+    RPI_CM4 = 0x14
 
 
 _old_style = {
