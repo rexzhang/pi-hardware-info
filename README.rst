@@ -10,7 +10,7 @@ PiHardwareInfo
     :target: https://pypi.org/project/PiHardwareInfo/
 
 
-Get Raspberry Pi hardware info from /proc/cpuinfo
+Get Raspberry Pi hardware/version info from /proc/cpuinfo
 
 
 Try
@@ -53,10 +53,32 @@ Usage
         print('only 2.4G Wifi')
 
 
+History
+=======
+
+0.4.0
+-----
+* Add, support Zero2W/400/CM4
+* Add, Overvoltage/OTP Program/OTP Read support
+
+0.3.3
+-----
+* Support raspberry pi 4B
+* Rewrite some code
+
+0.2.0
+-----
+* Add old style revision code support, support 1A/1B
+
+0.1.0
+-----
+* First release
+
+
 Alternative
 ===========
 
-* https://github.com/tompreston/raspi-version (work)
+* https://github.com/tompreston/raspi-version
 * https://pypi.org/project/pirev
 * https://pypi.org/project/RPi.version
 
@@ -64,6 +86,6 @@ Alternative
 Ref
 ===
 
-* https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
+* https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#raspberry-pi-revision-codes
 * https://www.raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/
 * https://www.raspberrypi-spy.co.uk/2012/09/getting-your-raspberry-pi-serial-number-using-python/
