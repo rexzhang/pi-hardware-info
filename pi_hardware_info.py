@@ -99,15 +99,22 @@ class PiHardwareInfo(object):
     revision = "0.0"
     serial_number = "UNKNOWN"
 
+    overvoltage = False
+    otp_program = False
+    otp_read = False
+
     manufacturer = Manufacturer.UNKNOWN
 
     def __str__(self):
-        return "<PiHardwareInfo:{:#08x}, {}, {}, {}, {}, {}, {}>".format(
+        return "<PiHardwareInfo:{:#08x}, {}, {}, {}, {}, {}, {}, {}, {}, {}>".format(
             self.revision_code,
             self.model_type.name,
             self.processor.name,
             self.memory,
             self.revision,
+            self.overvoltage,
+            self.otp_program,
+            self.otp_read,
             self.manufacturer.name,
             self.serial_number,
         )
@@ -123,6 +130,10 @@ def get_info_from_revision_code(code):
         info.processor = Processor((code & 0xF000) >> 12)
         info.memory = _memory[(code & 0x700000) >> 20]
         info.revision = "1.{}".format(code & 0xF)
+
+        info.overvoltage = bool((code & 0x80000000) >> 31)
+        info.overvoltage = bool((code & 0x40000000) >> 30)
+        info.overvoltage = bool((code & 0x20000000) >> 29)
 
         info.manufacturer = Manufacturer((code & 0xF0000) >> 16)
 
@@ -157,6 +168,6 @@ def get_info():
 
 
 if __name__ == "__main__":
-    # print(get_info_from_revision_code(int('0005', 16)))
-    # print(get_info_from_revision_code(int('a020d3', 16)))
+    # print(get_info_from_revision_code(int("0005", 16)))
+    # print(get_info_from_revision_code(int("a020d3", 16)))
     print(get_info())
