@@ -26,8 +26,8 @@ result
 
 .. code-block:: console
 
-    <PiHardwareInfo:0x000005, MODEL_B, UNKNOWN, 256, 2.0, QISDA, UNKNOWN>
-    <PiHardwareInfo:0xa020d3, MODEL_3B_PLUS, BCM2837, 1024, 1.3, SONY_UK, 00000000d855943b>
+    <PiHardwareInfo:0x000005, RPI_B, UNKNOWN, 256, 2.0, False, False, False, QISDA, UNKNOWN>
+    <PiHardwareInfo:0xa020d3, RPI_3B_PLUS, BCM2837, 1024, 1.3, False, False, False, SONY_UK, UNKNOWN>
 
 
 Install
