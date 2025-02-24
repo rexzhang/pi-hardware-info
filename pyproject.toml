@@ -1,0 +1,35 @@
+[build-system]
+# https://peps.python.org/pep-0621
+# https://setuptools.pypa.io/en/latest/userguide/quickstart.html
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PiHardwareInfo"
+description = "Get Raspberry Pi hardware info"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Rex Zhang" }, { email = "rex.zhang@gmail.com" }]
+keywords = ["raspberrypi"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dynamic = ["version"]
+
+[project.urls]
+repository = "https://github.com/rexzhang/pi-hardware-info"
+
+[tool.setuptools]
+py-modules = ["pi_hardware_info"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pi_hardware_info.__version__" }
+
+[tool.isort]
+profile = "black"
