@@ -4,3 +4,4 @@ fabric
 pip
 wheel
 build
+twine
