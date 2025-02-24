@@ -1,9 +1,7 @@
 # PiHardwareInfo
 
 [![image](https://img.shields.io/pypi/v/PiHardwareInfo.svg)](https://pypi.org/project/PiHardwareInfo/)
-
 [![image](https://img.shields.io/pypi/pyversions/PiHardwareInfo.svg)](https://pypi.org/project/PiHardwareInfo/)
-
 [![image](https://img.shields.io/pypi/dm/PiHardwareInfo.svg)](https://pypi.org/project/PiHardwareInfo/)
 
 Get Raspberry Pi hardware/version info from /proc/cpuinfo
@@ -19,8 +17,7 @@ curl -s https://raw.githubusercontent.com/rexzhang/pi-hardware-info/master/pi_ha
 result
 
 ```console
-<PiHardwareInfo:0x000005, RPI_B, UNKNOWN, 256, 2.0, False, False, False, QISDA, UNKNOWN>
-<PiHardwareInfo:0xa020d3, RPI_3B_PLUS, BCM2837, 1024, 1.3, False, False, False, SONY_UK, UNKNOWN>
+PiHardwareInfo(revision_code='d04170', model_type=<ModelType.RPI_5: 23>, processor=<Processor.BCM2712: 4>, memory=8192, revision='1.0', serial_number='ecc0679911343e07', model_name='Raspberry Pi 5 Model B Rev 1.0', overvoltage=False, otp_program=False, otp_read=False, manufacturer=<Manufacturer.SONY_UK: 0>)
 ```
 
 ## Install
@@ -29,7 +26,7 @@ result
 pip install PiHardwareInfo
 ```
 
-## Usage
+## Usage as library
 
 ```python
 from pi_hardware_info import ModelType, get_info
@@ -42,7 +39,23 @@ elif info.model_type == ModelType.MODEL_3B:
     print('only 2.4G Wifi')
 ```
 
+## Usage as tool
+
+```shell
+python -m pi_hardware_info
+```
+
 ## History
+
+### 0.5.0
+
+- Add, Support to raspberry pi 5
+- Codebase modernization Updates
+  - Drop py3.5 py3.6 py3.7 py3.8
+  - Add type hints
+  - Add unit test
+  - Add pyproject.toml
+  - Add pre-commit
 
 ### 0.4.0
 
