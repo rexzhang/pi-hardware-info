@@ -23,11 +23,11 @@ PiHardwareInfo(
  'model_name': 'Raspberry Pi 5 Model B Rev 1.0',
  'processor': <Processor.BCM2712: 4>,
  'memory': 8192,
- 'network_interface': {'eth0': '2C:CF:67:00:00:00',
-                       'wlan0': '2C:CF:67:00:00:00'},
+ 'manufacturer': <Manufacturer.SONY_UK: 0>,
  'revision': '1.0',
  'serial_number': 'ecc0679911340000',
- 'manufacturer': <Manufacturer.SONY_UK: 0>,
+ 'mac_address': {'eth0': '2C:CF:67:00:00:00',
+                 'wlan0': '2C:CF:67:00:00:00'},
  'overvoltage': False,
  'otp_program': False,
  'otp_read': False}
@@ -61,7 +61,7 @@ python -m pi_hardware_info
 
 ## History
 
-### 0.6.0 - 20250225
+### 0.6.1 - 20250225
 
 - Add, network interface MAC address info
 - Refactor

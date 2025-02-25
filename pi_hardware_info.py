@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from logging import getLogger
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 __author__ = "Rex Zhang"
 __author_email__ = "rex.zhang@gmail.com"
@@ -109,11 +109,11 @@ class PiHardwareInfo:
     model_name: str = "UNKNOWN"
     processor: Processor = Processor.UNKNOWN
     memory: int = 0
-    network_interface: dict = field(init=False)
 
+    manufacturer: Manufacturer = Manufacturer.UNKNOWN
     revision: str = "0.0"
     serial_number: str = "UNKNOWN"
-    manufacturer: Manufacturer = Manufacturer.UNKNOWN
+    mac_address: dict = field(init=False)
 
     overvoltage: bool = False
     otp_program: bool = False
@@ -175,7 +175,7 @@ class PiHardwareInfo:
             )
 
         # ---
-        network_interface = dict()
+        mac_address = dict()
         try:
             for interface in os.listdir(_NET_PATH):
                 mac_file = os.path.join(_NET_PATH, interface, "address")
@@ -183,12 +183,12 @@ class PiHardwareInfo:
                     with open(mac_file) as f:
                         mac = f.read().strip().upper()
                         if mac != "00:00:00:00:00:00":
-                            network_interface[interface] = mac
+                            mac_address[interface] = mac
 
         except FileNotFoundError:
             logger.warning(f"Can not load network interface info from {_NET_PATH}")
 
-        self.network_interface = network_interface
+        self.mac_address = mac_address
 
 
 def get_info():
