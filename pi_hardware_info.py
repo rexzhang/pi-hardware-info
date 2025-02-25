@@ -2,8 +2,9 @@
 Get Raspberry Pi hardware info
 """
 
+import os
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from logging import getLogger
 
@@ -19,7 +20,9 @@ __project_url__ = "https://github.com/rexzhang/pi-hardware-info"
 
 logger = getLogger(__file__)
 
-_memory = [256, 512, 1024, 2048, 4096, 8192, 16384]
+_CPU_INFO_FILE = "/proc/cpuinfo"
+_NET_PATH = "/sys/class/net"
+_MEMORY = [256, 512, 1024, 2048, 4096, 8192, 16384]
 
 
 class Manufacturer(Enum):
@@ -100,93 +103,103 @@ _old_style = {
 
 @dataclass
 class PiHardwareInfo:
-    revision_code: str
+    revision_code: str = "0x0"
 
     model_type: ModelType = ModelType.UNKNOWN
+    model_name: str = "UNKNOWN"
     processor: Processor = Processor.UNKNOWN
     memory: int = 0
+    network_interface: dict = field(init=False)
+
     revision: str = "0.0"
     serial_number: str = "UNKNOWN"
-    model_name: str = "UNKNOWN"
+    manufacturer: Manufacturer = Manufacturer.UNKNOWN
 
     overvoltage: bool = False
     otp_program: bool = False
     otp_read: bool = False
 
-    manufacturer: Manufacturer = Manufacturer.UNKNOWN
+    def _get_info_from_revision_code(self, revision_code: str):
+        code = int(revision_code, 16)
 
+        new_flag = (code & 0x800000) >> 23
+        if new_flag:
+            self.model_type = ModelType((code & 0xFF0) >> 4)
+            self.processor = Processor((code & 0xF000) >> 12)
+            self.memory = _MEMORY[(code & 0x700000) >> 20]
+            self.revision = f"1.{code & 0xF}"
 
-def get_info_from_revision_code(revision_code: str) -> PiHardwareInfo:
-    info = PiHardwareInfo(revision_code)
-    code = int(revision_code, 16)
+            self.overvoltage = bool((code & 0x80000000) >> 31)
+            self.overvoltage = bool((code & 0x40000000) >> 30)
+            self.overvoltage = bool((code & 0x20000000) >> 29)
 
-    new_flag = (code & 0x800000) >> 23
-    if new_flag:
-        info.model_type = ModelType((code & 0xFF0) >> 4)
-        info.processor = Processor((code & 0xF000) >> 12)
-        info.memory = _memory[(code & 0x700000) >> 20]
-        info.revision = f"1.{code & 0xF}"
+            self.manufacturer = Manufacturer((code & 0xF0000) >> 16)
 
-        info.overvoltage = bool((code & 0x80000000) >> 31)
-        info.overvoltage = bool((code & 0x40000000) >> 30)
-        info.overvoltage = bool((code & 0x20000000) >> 29)
+        else:
+            self.model_type = _old_style[code][0]
+            self.revision = _old_style[code][1]
+            self.memory = _old_style[code][2]
 
-        info.manufacturer = Manufacturer((code & 0xF0000) >> 16)
+            self.manufacturer = _old_style[code][3]
 
-    else:
-        info.model_type = _old_style[code][0]
-        info.revision = _old_style[code][1]
-        info.memory = _old_style[code][2]
+    @staticmethod
+    def _get_data_from_line(line: str) -> str:
+        index = line.find(":")
+        if index == -1:
+            return ""
 
-        info.manufacturer = _old_style[code][3]
+        return line[index + 1 :].lstrip(" ").strip(" \n")
 
-    return info
+    def __post_init__(self):
+        try:
+            with open(_CPU_INFO_FILE) as f:
+                for line in f:
+                    if "Revision" in line:
+                        self._get_info_from_revision_code(
+                            re.sub(r"Revision\t: ([a-z0-9]+)\n", r"\1", line)
+                        )
 
+                    elif line.startswith("Serial"):
+                        data = self._get_data_from_line(line)
+                        if data:
+                            self.serial_number = data
 
-def _get_data_from_line(line: str) -> str:
-    index = line.find(":")
-    if index == -1:
-        return ""
+                    elif line.startswith("Model"):
+                        data = self._get_data_from_line(line)
+                        if data:
+                            self.model_name = data
 
-    return line[index + 1 :].lstrip(" ").strip(" \n")
+        except FileNotFoundError:
+            logger.warning(
+                f"Load Raspberry Pi hardware info from {_CPU_INFO_FILE} failed!"
+            )
+
+        # ---
+        network_interface = dict()
+        try:
+            for interface in os.listdir(_NET_PATH):
+                mac_file = os.path.join(_NET_PATH, interface, "address")
+                if os.path.exists(mac_file):
+                    with open(mac_file) as f:
+                        mac = f.read().strip().upper()
+                        if mac != "00:00:00:00:00:00":
+                            network_interface[interface] = mac
+
+        except FileNotFoundError:
+            logger.warning(f"Can not load network interface info from {_NET_PATH}")
+
+        self.network_interface = network_interface
 
 
 def get_info():
-    info = None
-    serial_number = None
-    model_name = None
-
-    try:
-        with open("/proc/cpuinfo") as f:
-            for line in f:
-                if "Revision" in line:
-                    info = get_info_from_revision_code(
-                        re.sub(r"Revision\t: ([a-z0-9]+)\n", r"\1", line)
-                    )
-
-                elif line.startswith("Serial"):
-                    data = _get_data_from_line(line)
-                    if data:
-                        serial_number = data
-
-                elif line.startswith("Model"):
-                    data = _get_data_from_line(line)
-                    if data:
-                        model_name = data
-
-    except FileNotFoundError:
-        logger.warning("Load Raspberry Pi hardware info from /proc/cpuinfo failed!")
-
-    if info is None:
-        return PiHardwareInfo("0000")
-
-    if serial_number:
-        info.serial_number = serial_number
-    if model_name:
-        info.model_name = model_name
-
-    return info
+    # backwards compatible
+    return PiHardwareInfo()
 
 
 if __name__ == "__main__":
-    print(get_info())
+    import pprint
+    from dataclasses import asdict
+
+    print(
+        f"PiHardwareInfo(\n {pprint.pformat(asdict(PiHardwareInfo()), sort_dicts=False)}\n)"
+    )
