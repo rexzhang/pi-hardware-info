@@ -61,7 +61,7 @@ python -m pi_hardware_info
 
 ## History
 
-### 0.6.0
+### 0.6.0 - 20250225
 
 - Add, network interface MAC address info
 - Refactor

@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from logging import getLogger
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 __author__ = "Rex Zhang"
 __author_email__ = "rex.zhang@gmail.com"
