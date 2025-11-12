@@ -1,7 +1,7 @@
 # PiHardwareInfo
 
 [![image](https://img.shields.io/pypi/v/PiHardwareInfo.svg)](https://pypi.org/project/PiHardwareInfo/)
-[![image](https://img.shields.io/pypi/pyversions/PiHardwareInfo.svg)](https://pypi.org/project/PiHardwareInfo/)
+![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/rexzhang/pi-hardware-info/master/pyproject.toml)
 [![image](https://img.shields.io/pypi/dm/PiHardwareInfo.svg)](https://pypi.org/project/PiHardwareInfo/)
 
 Get Raspberry Pi hardware info from `/proc/cpuinfo` and `/sys/class/net/*`
