@@ -1,7 +1,0 @@
-pytest
-
-fabric
-pip
-wheel
-build
-twine
