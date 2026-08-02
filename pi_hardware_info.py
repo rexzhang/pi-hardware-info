@@ -22,7 +22,7 @@ logger = getLogger(__file__)
 
 _CPU_INFO_FILE = "/proc/cpuinfo"
 _NET_PATH = "/sys/class/net"
-_MEMORY = [256, 512, 1024, 2048, 4096, 8192, 16384]
+_MEMORY = [256, 512, 1024, 2048, 4096, 8192, 16384, 0]  # 0 mean Other
 
 
 class Manufacturer(Enum):
@@ -205,3 +205,4 @@ if __name__ == "__main__":
     print(
         f"PiHardwareInfo(\n {pprint.pformat(asdict(PiHardwareInfo()), sort_dicts=False)}\n)"
     )
+    input("Please press Enter to exit.")

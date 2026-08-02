@@ -58,12 +58,18 @@ elif info.model_type == ModelType.MODEL_3B:
 python -m pi_hardware_info
 ```
 
+## Note
+
+- For a memory size of "0/Other", the actual memory capacity can be determined from the rpi-sdram-size-gbit [firmware parameter](https://www.raspberrypi.com/documentation/computers/configuration.html#part4)
+
 ## History
 
 ### 0.7.0
 
-- Fix RPI_CM5_LITE
 - Support RPI_500, RPI_CM0
+- Support memory size code:7(Other), output 0
+- Fix RPI_CM5_LITE
+- Fix .otp_program/.otp_program
 
 ### 0.6.1 - 20250225
 
