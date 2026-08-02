@@ -132,8 +132,8 @@ class PiHardwareInfo:
             self.revision = f"1.{code & 0xF}"
 
             self.overvoltage = bool((code & 0x80000000) >> 31)
-            self.overvoltage = bool((code & 0x40000000) >> 30)
-            self.overvoltage = bool((code & 0x20000000) >> 29)
+            self.otp_program = bool((code & 0x40000000) >> 30)
+            self.otp_read = bool((code & 0x20000000) >> 29)
 
             self.manufacturer = Manufacturer((code & 0xF0000) >> 16)
 
