@@ -70,6 +70,7 @@ python -m pi_hardware_info
 - Support memory size code:7(Other), output 0
 - Fix RPI_CM5_LITE
 - Fix .otp_program/.otp_program
+- Add more unittest
 
 ### 0.6.1 - 20250225
 

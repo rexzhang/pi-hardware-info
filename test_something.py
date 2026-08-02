@@ -1,6 +1,9 @@
+import os
+from unittest.mock import patch
+
 import pytest
 
-from pi_hardware_info import ModelType, PiHardwareInfo
+from pi_hardware_info import Manufacturer, ModelType, PiHardwareInfo, Processor
 
 
 @pytest.fixture
@@ -8,6 +11,26 @@ def info():
     obj = PiHardwareInfo()
     yield obj
     del obj
+
+
+def test_cpuinfo_permission_error(caplog):
+    """PiHardwareInfo should survive PermissionError reading /proc/cpuinfo and keep defaults."""
+    with patch("builtins.open", side_effect=PermissionError):
+        obj = PiHardwareInfo()
+
+    assert obj.model_type == ModelType.UNKNOWN
+    assert obj.serial_number == "UNKNOWN"
+    assert obj.model_name == "UNKNOWN"
+    assert "Load Raspberry Pi hardware info from" in caplog.text
+
+
+def test_net_path_permission_error(caplog):
+    """PiHardwareInfo should survive PermissionError on /sys/class/net and keep mac_address empty."""
+    with patch("pi_hardware_info.os.listdir", side_effect=PermissionError):
+        obj = PiHardwareInfo()
+
+    assert obj.mac_address == {}
+    assert "Can not load network interface info from" in caplog.text
 
 
 def test_old_style_revision_codes(info):
@@ -20,8 +43,37 @@ def test_old_style_revision_codes(info):
     assert info.revision == "1.1"
 
 
+def test_old_style_leaves_new_fields_at_defaults(info):
+    """Old-style revision codes don't carry processor/otp bits; fields stay at defaults."""
+    info._get_info_from_revision_code("0010")
+    assert info.processor == Processor.UNKNOWN
+    assert info.overvoltage is False
+    assert info.otp_program is False
+    assert info.otp_read is False
+
+
+def test_unknown_old_style_revision_code(info, caplog):
+    """Unknown old-style revision codes should not raise KeyError; fields stay at defaults."""
+    info._get_info_from_revision_code("0001")
+
+    assert info.model_type == ModelType.UNKNOWN
+    assert info.revision == "0.0"
+    assert info.memory == 0
+    assert info.manufacturer == Manufacturer.UNKNOWN
+
+    assert "Unknown revision code: 0001" in caplog.text
+
+
 def test_new_style_revision_codes(info):
     info._get_info_from_revision_code("a020d3")
+    assert info.model_type == ModelType.RPI_3B_PLUS
+    assert info.revision == "1.3"
+    assert info.memory == 1024
+
+
+def test_new_style_revision_code_uppercase(info):
+    """Revision code extraction from /proc/cpuinfo should support uppercase hex (A-F)."""
+    info._get_info_from_revision_code("A020D3")
     assert info.model_type == ModelType.RPI_3B_PLUS
     assert info.revision == "1.3"
     assert info.memory == 1024

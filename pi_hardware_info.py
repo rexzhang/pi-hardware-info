@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from logging import getLogger
 
-__version__ = "0.6.1"
+__version__ = "0.7.0"
 
 __author__ = "Rex Zhang"
 __author_email__ = "rex.zhang@gmail.com"
@@ -18,7 +18,7 @@ __description__ = "Get Raspberry Pi hardware info"
 __project_url__ = "https://github.com/rexzhang/pi-hardware-info"
 
 
-logger = getLogger(__file__)
+logger = getLogger(__name__)
 
 _CPU_INFO_FILE = "/proc/cpuinfo"
 _NET_PATH = "/sys/class/net"
@@ -115,7 +115,7 @@ class PiHardwareInfo:
     manufacturer: Manufacturer = Manufacturer.UNKNOWN
     revision: str = "0.0"
     serial_number: str = "UNKNOWN"
-    mac_address: dict = field(init=False)
+    mac_address: dict[str, str] = field(init=False)
 
     overvoltage: bool = False
     otp_program: bool = False
@@ -138,11 +138,17 @@ class PiHardwareInfo:
             self.manufacturer = Manufacturer((code & 0xF0000) >> 16)
 
         else:
-            self.model_type = _old_style[code][0]
-            self.revision = _old_style[code][1]
-            self.memory = _old_style[code][2]
+            # Old-style revision codes don't carry processor, overvoltage,
+            # otp_program, or otp_read bits — those fields stay at defaults.
+            info = _old_style.get(code)
+            if info is None:
+                logger.warning(f"Unknown revision code: {revision_code}")
+                return
 
-            self.manufacturer = _old_style[code][3]
+            self.model_type = info[0]
+            self.revision = info[1]
+            self.memory = info[2]
+            self.manufacturer = info[3]
 
     @staticmethod
     def _get_data_from_line(line: str) -> str:
@@ -156,10 +162,14 @@ class PiHardwareInfo:
         try:
             with open(_CPU_INFO_FILE) as f:
                 for line in f:
-                    if "Revision" in line:
-                        self._get_info_from_revision_code(
-                            re.sub(r"Revision\t: ([a-z0-9]+)\n", r"\1", line)
-                        )
+                    if line.startswith("Revision"):
+                        m = re.search(r"Revision\s*:\s*([0-9a-fA-F]+)", line)
+                        if m:
+                            self._get_info_from_revision_code(m.group(1))
+                        else:
+                            logger.warning(
+                                f"Failed to parse revision line: {line.strip()}"
+                            )
 
                     elif line.startswith("Serial"):
                         data = self._get_data_from_line(line)
@@ -171,7 +181,7 @@ class PiHardwareInfo:
                         if data:
                             self.model_name = data
 
-        except FileNotFoundError:
+        except OSError:
             logger.warning(
                 f"Load Raspberry Pi hardware info from {_CPU_INFO_FILE} failed!"
             )
@@ -187,7 +197,7 @@ class PiHardwareInfo:
                         if mac != "00:00:00:00:00:00":
                             mac_address[interface] = mac
 
-        except FileNotFoundError:
+        except OSError:
             logger.warning(f"Can not load network interface info from {_NET_PATH}")
 
         self.mac_address = mac_address
@@ -199,10 +209,10 @@ def get_info():
 
 
 if __name__ == "__main__":
-    import pprint
+    import json
     from dataclasses import asdict
 
     print(
-        f"PiHardwareInfo(\n {pprint.pformat(asdict(PiHardwareInfo()), sort_dicts=False)}\n)"
+        f"PiHardwareInfo(\n {json.dumps(asdict(PiHardwareInfo()), indent=4, ensure_ascii=False, default=str)}\n)"
     )
-    input("Please press Enter to exit.")
+    input("Please press Enter to exit...")
