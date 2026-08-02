@@ -215,4 +215,7 @@ if __name__ == "__main__":
     print(
         f"PiHardwareInfo(\n {json.dumps(asdict(PiHardwareInfo()), indent=4, ensure_ascii=False, default=str)}\n)"
     )
-    input("Please press Enter to exit...")
+    try:
+        input("Please press Enter to exit...")
+    except (EOFError, KeyboardInterrupt):
+        pass
