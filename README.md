@@ -19,15 +19,14 @@ result
 ```console
 PiHardwareInfo(
  {'revision_code': '0x0',
- 'model_type': <ModelType.RPI_5: 23>,
- 'model_name': 'Raspberry Pi 5 Model B Rev 1.0',
- 'processor': <Processor.BCM2712: 4>,
- 'memory': 8192,
+ 'model_type': <ModelType.RPI_3B_PLUS: 13>,
+ 'model_name': 'Raspberry Pi 3 Model B Plus Rev 1.3',
+ 'processor': <Processor.BCM2837: 2>,
+ 'memory': 1024,
  'manufacturer': <Manufacturer.SONY_UK: 0>,
- 'revision': '1.0',
- 'serial_number': 'ecc0679911340000',
- 'mac_address': {'eth0': '2C:CF:67:00:00:00',
-                 'wlan0': '2C:CF:67:00:00:00'},
+ 'revision': '1.3',
+ 'serial_number': '00000000d855943b',
+ 'mac_address': {'eth0': 'B8:27:EB:55:94:3B', 'wlan0': 'B8:27:EB:00:C1:6E'},
  'overvoltage': False,
  'otp_program': False,
  'otp_read': False}
@@ -60,6 +59,11 @@ python -m pi_hardware_info
 ```
 
 ## History
+
+### 0.7.0
+
+- Fix RPI_CM5_LITE
+- Support RPI_500, RPI_CM0
 
 ### 0.6.1 - 20250225
 

@@ -76,7 +76,9 @@ class ModelType(Enum):
     # 0x16: Internal use only
     RPI_5 = 0x17
     RPI_CM5 = 0x18
-    RPI_CM5_LITE = 0x19
+    RPI_500 = 0x19
+    RPI_CM5_LITE = 0x1A
+    RPI_CM0 = 0x1B
 
 
 _old_style = {

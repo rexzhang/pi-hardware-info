@@ -43,3 +43,36 @@ def test_5b(info):
     assert info.overvoltage is False
     assert info.otp_program is False
     assert info.otp_read is False
+
+
+def test_cm5(info):
+    info._get_info_from_revision_code("b04180")
+    print(info)
+    assert info.model_type == ModelType.RPI_CM5
+    assert info.revision == "1.0"
+    assert info.memory == 2048
+    assert info.overvoltage is False
+    assert info.otp_program is False
+    assert info.otp_read is False
+
+
+def test_500plus(info):
+    info._get_info_from_revision_code("e04190")
+    print(info)
+    assert info.model_type == ModelType.RPI_500
+    assert info.revision == "1.0"
+    assert info.memory == 16384
+    assert info.overvoltage is False
+    assert info.otp_program is False
+    assert info.otp_read is False
+
+
+def test_cm5_lite(info):
+    info._get_info_from_revision_code("b041a0")
+    print(info)
+    assert info.model_type == ModelType.RPI_CM5_LITE
+    assert info.revision == "1.0"
+    assert info.memory == 2048
+    assert info.overvoltage is False
+    assert info.otp_program is False
+    assert info.otp_read is False
