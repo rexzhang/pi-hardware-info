@@ -218,4 +218,4 @@ if __name__ == "__main__":
     try:
         input("Please press Enter to exit...")
     except (EOFError, KeyboardInterrupt):
-        pass
+        print("...maybe in pipeline, skip input")

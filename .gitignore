@@ -106,3 +106,4 @@ venv.bak/
 # ---
 *.code-workspace
 .DS_Store
+*.zip
