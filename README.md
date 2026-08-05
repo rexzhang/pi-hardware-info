@@ -64,13 +64,14 @@ python -m pi_hardware_info
 
 ## History
 
-### 0.7.0
+### 0.7.0 - 20260805
 
 - Support RPI_500, RPI_CM0
 - Support memory size code:7(Other), output 0
 - Fix RPI_CM5_LITE
 - Fix .otp_program/.otp_program
 - Add more unittest
+- Add file `pi-hardware-info.desktop` for run in RPi GUI
 
 ### 0.6.1 - 20250225
 
