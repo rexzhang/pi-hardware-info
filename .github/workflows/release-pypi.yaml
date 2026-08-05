@@ -10,15 +10,12 @@ jobs:
   pypi-publish:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: ${{ vars.PYPI_PROJECT_URL }}
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
       - name: Checkout repository
         # https://github.com/actions/checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: Install dependencies
         run: |
           python3 -m pip install -U -r requirements.d/pypi.txt
