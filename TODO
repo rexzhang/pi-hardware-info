@@ -1,0 +1,7 @@
+pi_hardware_info:
+	☐ 解决 rpi4b 4gb 版本内存大小检测问题
+        通过 rpi-sdram-size-gbit 明确判断 "Other" 内存的实际容量,当前 memory=0 只表示未知
+		触发条件,revision code 内存位为 7(Other)时,读取 /proc/device-tree/chosen/rpi-sdram-size-gbit
+		换算,值为 Gbit 的 4 字节大端整数,MB = Gbit * 128(例,3GB 板读到 24,得 3072)
+		兜底,文件不存在或读取失败时保持 0(非树莓派环境、旧固件)
+		背景,Pi 4 3GB(2026-04 发布)的内存位无法编码 3GB 而落入 Other;其完整 revision code 官方尚未公布,无法以硬编码方式识别
