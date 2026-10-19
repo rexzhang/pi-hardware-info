@@ -4,6 +4,6 @@ Type=Application
 Name=PiHardwareInfo
 Icon=dialog-information
 Comment=PiHardwareInfo
-Exec=python3 '%k/pi_hardware_info.py'
+Exec=python3 '%k/pi_hardware_info/__init__.py'
 Terminal=true
 Categories=Utility;

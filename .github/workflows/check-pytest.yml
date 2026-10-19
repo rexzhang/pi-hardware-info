@@ -38,7 +38,10 @@ jobs:
             ${{ runner.os }}-
       - name: Install dependencies
         run: |
-          pip install -U -r requirements.d/test.txt
+          pip install -U -r requirements.d/test.txt mypy
       - name: Test with pytest
         run: |
           pytest --cov=pi_hardware_info --cov-report=xml
+      - name: Check with mypy
+        run: |
+          mypy

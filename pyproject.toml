@@ -2,7 +2,7 @@
 # https://peps.python.org/pep-0621
 # https://setuptools.pypa.io/en/latest/userguide/quickstart.html
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -23,7 +23,10 @@ dynamic = ["version"]
 repository = "https://github.com/rexzhang/pi-hardware-info"
 
 [tool.setuptools]
-py-modules = ["pi_hardware_info"]
+packages = ["pi_hardware_info"]
+
+[tool.setuptools.package-data]
+pi_hardware_info = ["py.typed"]
 
 [tool.setuptools.dynamic]
 version = { attr = "pi_hardware_info.__version__" }
@@ -34,3 +37,11 @@ addopts = "--cov=. --cov-report html"
 
 [tool.isort]
 profile = "black"
+
+[tool.mypy]
+files = ["pi_hardware_info", "test_something.py"]
+# mypy 最低仅支持 3.10 检查目标;运行时仍支持 3.9
+python_version = "3.10"
+strict = true
+warn_unreachable = true
+enable_error_code = ["redundant-expr", "truthy-bool", "ignore-without-code"]

@@ -11,8 +11,10 @@ Get Raspberry Pi hardware info from `/proc/cpuinfo` and `/sys/class/net/*`
 run
 
 ```console
-curl -s https://raw.githubusercontent.com/rexzhang/pi-hardware-info/master/pi_hardware_info.py | python3
+curl -s https://raw.githubusercontent.com/rexzhang/pi-hardware-info/master/pi_hardware_info/__init__.py | python3
 ```
+
+This one-liner depends on `pi_hardware_info/__init__.py` staying self-contained (no relative imports).
 
 result
 
@@ -63,6 +65,13 @@ python -m pi_hardware_info
 - For a memory size of "0/Other", the actual memory capacity can be determined from the rpi-sdram-size-gbit [firmware parameter](https://www.raspberrypi.com/documentation/computers/configuration.html#part4)
 
 ## History
+
+### 0.8.0 - 20261019
+
+- Convert single module to package layout, add `py.typed` marker (PEP 561)
+- Downstream mypy users no longer need `follow_untyped_imports`
+- Add full type hints; enable strict mypy checking for package and tests
+- Keep `curl | python3`, `python -m pi_hardware_info`, and direct-file execution working
 
 ### 0.7.0 - 20260805
 

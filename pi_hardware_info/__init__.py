@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from logging import getLogger
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 __author__ = "Rex Zhang"
 __author_email__ = "rex.zhang@gmail.com"
@@ -121,7 +121,7 @@ class PiHardwareInfo:
     otp_program: bool = False
     otp_read: bool = False
 
-    def _get_info_from_revision_code(self, revision_code: str):
+    def _get_info_from_revision_code(self, revision_code: str) -> None:
         code = int(revision_code, 16)
 
         new_flag = (code & 0x800000) >> 23
@@ -158,7 +158,7 @@ class PiHardwareInfo:
 
         return line[index + 1 :].lstrip(" ").strip(" \n")
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         try:
             with open(_CPU_INFO_FILE) as f:
                 for line in f:
@@ -187,7 +187,7 @@ class PiHardwareInfo:
             )
 
         # ---
-        mac_address = dict()
+        mac_address: dict[str, str] = {}
         try:
             for interface in os.listdir(_NET_PATH):
                 mac_file = os.path.join(_NET_PATH, interface, "address")
@@ -203,12 +203,12 @@ class PiHardwareInfo:
         self.mac_address = mac_address
 
 
-def get_info():
+def get_info() -> PiHardwareInfo:
     # backwards compatible
     return PiHardwareInfo()
 
 
-if __name__ == "__main__":
+def _main() -> None:
     import json
     from dataclasses import asdict
 
@@ -219,3 +219,7 @@ if __name__ == "__main__":
         input("Please press Enter to exit...")
     except (EOFError, KeyboardInterrupt):
         print("...maybe in pipeline, skip input")
+
+
+if __name__ == "__main__":
+    _main()
