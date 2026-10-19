@@ -70,6 +70,7 @@ python -m pi_hardware_info
 
 - Convert single module to package layout, add `py.typed` marker (PEP 561)
 - Downstream mypy users no longer need `follow_untyped_imports`
+- Drop Python 3.9/3.10 support; add Python 3.15 to the test matrix
 - Add full type hints; enable strict mypy checking for package and tests
 - Keep `curl | python3`, `python -m pi_hardware_info`, and direct-file execution working
 

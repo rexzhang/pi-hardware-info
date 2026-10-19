@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 name = "PiHardwareInfo"
 description = "Get Raspberry Pi hardware info"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license-files = ["LICENSE"]
 authors = [{ name = "Rex Zhang" }, { email = "rex.zhang@gmail.com" }]
 keywords = ["raspberrypi"]
@@ -40,8 +40,7 @@ profile = "black"
 
 [tool.mypy]
 files = ["pi_hardware_info", "test_something.py"]
-# mypy 最低仅支持 3.10 检查目标;运行时仍支持 3.9
-python_version = "3.10"
+python_version = "3.11"
 strict = true
 warn_unreachable = true
 enable_error_code = ["redundant-expr", "truthy-bool", "ignore-without-code"]
