@@ -4,19 +4,19 @@ name: pre-commit
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - "**.py"
 
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   pre-commit-check:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/checkout
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       # https://github.com/griceturrble/precommit-checks-action
       - uses: griceturrble/precommit-checks-action@v2
